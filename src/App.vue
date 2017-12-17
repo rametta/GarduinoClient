@@ -1,17 +1,67 @@
 <template>
-  <div id="app">
-    <router-link to="/login">Login</router-link>
-    <router-link to="/signup">Signup</router-link>
-    <router-link to="/">Home</router-link>
-    <router-link to="/garden/1">Garden 1</router-link>
-    {{$route.name}}
-    <router-view/>
-  </div>
+  <v-app id="inspire">
+    <v-navigation-drawer
+      fixed
+      v-model="drawer"
+      app
+    >
+      <v-list dense>
+
+        <v-list-tile @click="$router.push('/')">
+          <v-list-tile-action>
+            <v-icon>home</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Home</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile @click="$router.push('/login')">
+          <v-list-tile-action>
+            <v-icon>contact_mail</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Contact</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-toolbar color="green" dark fixed app>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-title>Garduino</v-toolbar-title>
+    </v-toolbar>
+
+    <v-content>
+      <v-container fluid fill-height>
+        <v-layout
+          justify-center
+          align-center
+        >
+          <router-view/>
+        </v-layout>
+      </v-container>
+    </v-content>
+
+    <v-footer color="green" app>
+      <span class="white--text">Jason Rametta &copy; {{year}}</span>
+    </v-footer>
+
+  </v-app>
 </template>
 
 <script>
 export default {
   name: 'app',
+  data: () => ({
+    drawer: null,
+  }),
+  computed: {
+    year() {
+      return new Date().getFullYear();
+    },
+  },
 };
 </script>
 

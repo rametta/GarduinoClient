@@ -8,6 +8,11 @@ import('vuetify/dist/vuetify.min.css');
 Vue.config.productionTip = false;
 Vue.use(Vuetify);
 
+Vue.filter('json', (value) => {
+  if (!value) return '';
+  return JSON.stringify(value);
+});
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
