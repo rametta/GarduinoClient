@@ -1,7 +1,6 @@
 <template>
   <div>
-    {{pageName}}
-    {{gardens | json}}
+    {{$route.name}}
   </div>
 </template>
 
@@ -9,10 +8,8 @@
 import gardenService from './../services/garden.service';
 
 export default {
-  name: 'Home',
   data() {
     return {
-      pageName: 'Home page',
       gardens: [],
       error: false,
     };

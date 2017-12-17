@@ -1,16 +1,13 @@
 <template>
   <div>
-    {{pageName}}
+    {{$route.name}}
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Login',
   data() {
-    return {
-      pageName: 'Login page',
-    };
+    return {};
   },
 };
 </script>

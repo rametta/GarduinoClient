@@ -6,11 +6,8 @@
 
 <script>
 export default {
-  name: 'Garden',
   data() {
-    return {
-      pageName: 'Garden page',
-    };
+    return {};
   },
 };
 </script>
