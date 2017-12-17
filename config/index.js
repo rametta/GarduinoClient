@@ -15,7 +15,11 @@ module.exports = {
         target: 'http://localhost:8080',
         changeOrigin: true,
       },
-      '/auth': {
+      '/authenticate': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
+      '/register': {
         target: 'http://localhost:8080',
         changeOrigin: true,
       },

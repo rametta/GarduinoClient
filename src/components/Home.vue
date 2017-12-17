@@ -1,6 +1,10 @@
 <template>
   <div>
     {{$route.name}}
+    Gardens
+    <ul>
+      <li v-for="garden in gardens" :key="garden.id">{{garden.name}}</li>
+    </ul>
   </div>
 </template>
 
@@ -18,7 +22,7 @@ export default {
     gardenService
       .queryGardens()
       .then(({ data }) => {
-        this.gardens = data.Response;
+        this.gardens = data.results;
       })
       .catch(() => {
         this.error = true;
