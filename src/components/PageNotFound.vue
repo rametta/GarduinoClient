@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{$route.name}}
+    404
   </div>
 </template>
 

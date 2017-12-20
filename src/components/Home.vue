@@ -3,7 +3,9 @@
     {{$route.name}}
     Gardens
     <ul>
-      <li v-for="garden in gardens" :key="garden.id">{{garden.name}}</li>
+      <li v-for="garden in gardens" :key="garden.id">
+        <router-link :to="{ name: 'garden', params: { garden: garden.id }}">{{garden.name}}</router-link>
+      </li>
     </ul>
   </div>
 </template>
