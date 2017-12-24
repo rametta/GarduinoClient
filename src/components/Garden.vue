@@ -11,7 +11,7 @@
 
     </v-layout>
 
-    <v-progress-circular v-if="readings.length === 0" indeterminate color="primary"></v-progress-circular>
+    <v-progress-linear v-if="readings.length === 0" indeterminate color="primary"></v-progress-linear>
 
     <v-layout v-if="readings[0]" row wrap>
 
@@ -26,7 +26,7 @@
       <v-flex md3>
         <v-card dark color="primary">
           <v-card-text>
-            Humidity {{readings[0].humidity}}%
+            Light {{readings[0].light}}
           </v-card-text>
         </v-card>
       </v-flex>
@@ -34,7 +34,7 @@
       <v-flex md3>
         <v-card dark color="primary">
           <v-card-text>
-            Light {{readings[0].light}}
+            Humidity {{readings[0].humidity}}%
           </v-card-text>
         </v-card>
       </v-flex>
@@ -53,6 +53,21 @@
       
     </v-layout>
 
+    <v-layout v-if="readings[0]" row wrap>
+      <v-flex md6>
+        <area-chart :chart-data="temperatureData" :options="temperatureOptions" :type="'line'" />
+      </v-flex>
+      <v-flex md6>
+        <area-chart :chart-data="lightData" :options="lightOptions" :type="'line'" />
+      </v-flex>
+      <v-flex md6>
+        <area-chart :chart-data="humidityData" :options="humidityOptions" :type="'line'" />
+      </v-flex>
+      <v-flex md6>
+        <area-chart :chart-data="moistureData" :options="moistureOptions" :type="'line'" />
+      </v-flex>
+    </v-layout>
+
   </v-container>
 </template>
 
@@ -60,14 +75,85 @@
 import * as moment from 'moment';
 import gardenService from './../services/garden.service';
 import readingService from './../services/reading.service';
+import AreaChart from './AreaChart';
 
 export default {
+  components: { AreaChart },
   data() {
     return {
       garden: null,
       readings: [],
       error: false,
       readingsInterval: null,
+
+      temperatureData: {
+        labels: [],
+        datasets: [{
+          label: 'Temperature',
+          backgroundColor: '#f44141',
+          data: [],
+        }],
+      },
+
+      temperatureOptions: {
+        responsive: true,
+        maintainAspectRatio: true,
+        legend: {
+          display: true,
+        },
+      },
+
+      lightData: {
+        labels: [],
+        datasets: [{
+          label: 'Light Level',
+          backgroundColor: '#f4b241',
+          data: [],
+        }],
+      },
+
+      lightOptions: {
+        responsive: true,
+        maintainAspectRatio: true,
+        legend: {
+          display: true,
+        },
+      },
+
+      humidityData: {
+        labels: [],
+        datasets: [{
+          label: 'Humidity',
+          backgroundColor: '#1976D2',
+          data: [],
+        }],
+      },
+
+      humidityOptions: {
+        responsive: true,
+        maintainAspectRatio: true,
+        legend: {
+          display: true,
+        },
+      },
+
+      moistureData: {
+        labels: [],
+        datasets: [{
+          label: 'Moisture',
+          backgroundColor: '#1976D2',
+          data: [],
+        }],
+      },
+
+      moistureOptions: {
+        responsive: true,
+        maintainAspectRatio: true,
+        legend: {
+          display: true,
+        },
+      },
+
     };
   },
   methods: {
@@ -85,14 +171,31 @@ export default {
         this.error = true;
       });
 
-    // Get readings every 3 seconds
+    // Get readings every 3 seconds for past 2 minutes
     this.readingsInterval = setInterval(() => {
       readingService.queryReadings({
         gardenId: this.$route.params.garden,
         orderByDesc: 'id',
+        take: 60,
       })
       .then(({ data }) => {
         this.readings = data.results;
+
+        // Temperature
+        this.temperatureData.labels = this.readings.map(r => moment(r.date).format('h:mm')).reverse();
+        this.temperatureData.datasets[0].data = this.readings.map(r => r.temperature).reverse();
+
+        // Light
+        this.lightData.labels = this.temperatureData.labels;
+        this.lightData.datasets[0].data = this.readings.map(r => r.light).reverse();
+
+        // Humidity
+        this.humidityData.labels = this.temperatureData.labels;
+        this.humidityData.datasets[0].data = this.readings.map(r => r.humidity).reverse();
+
+        // Moisture
+        this.moistureData.labels = this.temperatureData.labels;
+        this.moistureData.datasets[0].data = this.readings.map(r => r.moisture).reverse();
       })
       .catch(() => {
         this.error = true;
@@ -104,7 +207,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 
