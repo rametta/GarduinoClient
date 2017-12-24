@@ -12,17 +12,9 @@ module.exports = {
     // Proxy to API server during development
     proxyTable: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://localhost:5000',
         changeOrigin: true,
-      },
-      '/authenticate': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-      },
-      '/register': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-      },
+      }
     },
 
     // Various Dev Server settings

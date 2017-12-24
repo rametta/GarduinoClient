@@ -1,15 +1,15 @@
 import axios from 'axios';
 
 export default {
-  queryReadings(query) {
-    return axios.get('/api/readings', { params: { query } });
+  queryReadings(params) {
+    return axios.get('/api/readings', { params });
   },
 
   postReading(reading) {
     return axios.post('/api/reading', { reading });
   },
 
-  deleteReading(readingId) {
-    return axios.delete('/api/reading', { params: { readingId } });
+  deleteReading(params) {
+    return axios.delete('/api/reading', { params });
   },
 };

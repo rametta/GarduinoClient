@@ -1,15 +1,15 @@
 import axios from 'axios';
 
 export default {
-  queryGardens(query) {
-    return axios.get('/api/gardens', { params: { query } });
+  queryGardens(params) {
+    return axios.get('/api/gardens', { params });
   },
 
   postGarden(garden) {
     return axios.post('/api/garden', { garden });
   },
 
-  deleteGarden(gardenId) {
-    return axios.delete('/api/garden', { params: { gardenId } });
+  deleteGarden(params) {
+    return axios.delete('/api/garden', { params });
   },
 };

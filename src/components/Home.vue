@@ -1,13 +1,25 @@
 <template>
-  <div>
-    {{$route.name}}
-    Gardens
-    <ul>
-      <li v-for="garden in gardens" :key="garden.id">
-        <router-link :to="{ name: 'garden', params: { garden: garden.id }}">{{garden.name}}</router-link>
-      </li>
-    </ul>
-  </div>
+
+  <v-container grid-list-md>
+
+    <v-layout row wrap>
+
+      <v-flex md6 v-for="garden in gardens" :key="garden.id">
+        <v-card :to="{ name: 'garden', params: { garden: garden.id }}">
+          <v-card-media :src="garden.imageLink" height="200px"></v-card-media>
+          <v-card-title primary-title>
+            <div>
+              <h3 class="headline mb-0">{{garden.name}}</h3>
+              <div>{{garden.description}}</div>
+            </div>
+          </v-card-title>
+        </v-card>
+      </v-flex>
+
+    </v-layout>
+
+  </v-container>
+
 </template>
 
 <script>

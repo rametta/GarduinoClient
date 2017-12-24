@@ -1,23 +1,21 @@
 <template>
   <v-app id="inspire">
 
-    <v-toolbar color="green" dark fixed app>
-      <v-toolbar-title>Garduino - {{$route.name}}</v-toolbar-title>
+    <v-toolbar dark fixed app>
+      <v-toolbar-title>
+        <v-btn :to="'/'" flat icon>
+          <v-icon>home</v-icon>
+        </v-btn>
+        Garduino
+      </v-toolbar-title>
     </v-toolbar>
 
     <v-content>
-      <v-container fluid fill-height>
-        <v-layout
-          justify-center
-          align-center
-        >
-          <router-view/>
-        </v-layout>
-      </v-container>
+      <router-view/>
     </v-content>
 
-    <v-footer color="green" app>
-      <span class="white--text" v-once>Jason Rametta &copy; {{year}}</span>
+    <v-footer dark app>
+      <div class="white--text text-xs-center" style="width: 100%" v-once>&copy; Rametta {{year}}</div>
     </v-footer>
 
   </v-app>
