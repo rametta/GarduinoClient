@@ -5,13 +5,14 @@
     <v-layout v-if="garden" row>
 
       <v-flex xs12>
-        <h1>{{garden.name}}</h1>
-        <span>{{garden.description}}</span>
+        <h1 class="d-inline">{{garden.name}}</h1>
+        <span class="mx-3 d-inline">{{garden.description}}</span>
+        <small v-if="readings[0]">Last update: {{formatDate(readings[0].date)}}</small>
       </v-flex>
 
     </v-layout>
 
-    <v-progress-linear v-if="readings.length === 0" indeterminate color="primary"></v-progress-linear>
+    <v-progress-linear v-if="firstLoad" indeterminate color="primary"></v-progress-linear>
 
     <v-layout v-if="readings[0]" row wrap>
 
@@ -45,10 +46,6 @@
             Soil Moisture {{readings[0].moisture}}
           </v-card-text>
         </v-card>
-      </v-flex>
-
-      <v-flex xs12>
-        <small>Last update: {{formatDate(readings[0].date)}}</small>
       </v-flex>
       
     </v-layout>
@@ -85,6 +82,7 @@ export default {
       readings: [],
       error: false,
       readingsInterval: null,
+      firstLoad: false,
 
       temperatureData: {
         labels: [],
@@ -162,6 +160,8 @@ export default {
     },
   },
   created() {
+    this.firstLoad = true;
+
     // Get garden
     gardenService.queryGardens({ id: this.$route.params.garden })
       .then(({ data }) => {
@@ -169,6 +169,9 @@ export default {
       })
       .catch(() => {
         this.error = true;
+      })
+      .then(() => {
+        this.firstLoad = false;
       });
 
     // Get readings every 3 seconds for past 2 minutes
@@ -199,6 +202,9 @@ export default {
       })
       .catch(() => {
         this.error = true;
+      })
+      .then(() => {
+        this.firstLoad = false;
       });
     }, 3000);
   },
@@ -209,5 +215,7 @@ export default {
 </script>
 
 <style scoped>
-
+.d-inline {
+  display: inline;
+}
 </style>
