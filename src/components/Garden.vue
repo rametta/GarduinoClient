@@ -12,7 +12,23 @@
 
     </v-layout>
 
+    <v-layout v-if="!garden && !firstLoad">
+      <v-flex xs12>
+        There is no garden here, <router-link to="/">go back home</router-link>
+      </v-flex>
+    </v-layout>
+
     <v-progress-linear v-if="firstLoad" indeterminate color="primary"></v-progress-linear>
+
+    <v-layout v-if="garden && readings.length === 0 && !firstLoad">
+      <v-flex xs12>
+        <v-alert color="info" icon="priority_high" value="true">
+          There is no data for this garden yet
+        </v-alert>
+      </v-flex>
+    </v-layout>
+
+
 
     <v-layout v-if="readings[0]" row wrap>
 
@@ -65,6 +81,51 @@
       </v-flex>
     </v-layout>
 
+    <v-dialog v-if="garden" v-model="confirmDelete" max-width="290">
+      <v-card>
+        <v-card-title class="headline">Delete Garden?</v-card-title>
+        <v-card-text>Are you sure you would like to permanently delete garden <strong>{{garden.name}}</strong>?</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="darken-1" flat="flat" @click.native="confirmDelete = false">Cancel</v-btn>
+          <v-btn color="red darken-1" flat="flat" @click.native="confirmDelete = false; deleteGarden()">Delete</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-tooltip top>
+      <v-btn
+        slot="activator"
+        fixed
+        dark
+        fab
+        bottom
+        right
+        color="primary"
+        @click="bottomSheetVisible = true"
+      >
+        <v-icon>local_florist</v-icon>
+      </v-btn>
+      <span>Garden Actions</span>
+    </v-tooltip>
+
+    <div class="text-xs-center">
+      <v-bottom-sheet v-model="bottomSheetVisible">
+        <v-list>
+          <v-subheader>Garden actions</v-subheader>
+          <v-list-tile @click="bottomSheetVisible = false" :disabled="true">
+            <v-list-tile-title>Water Garden 3 Sec.</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="bottomSheetVisible = false" :disabled="true">
+            <v-list-tile-title>Modify Garden</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="bottomSheetVisible = false; confirmDelete = true">
+            <v-list-tile-title>Delete Garden</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-bottom-sheet>
+    </div>
+
   </v-container>
 </template>
 
@@ -83,6 +144,8 @@ export default {
       error: false,
       readingsInterval: null,
       firstLoad: false,
+      bottomSheetVisible: false,
+      confirmDelete: false,
 
       temperatureData: {
         labels: [],
@@ -157,6 +220,15 @@ export default {
   methods: {
     formatDate(date) {
       return moment(date).format('MMM Do, YYYY h:mmA');
+    },
+    deleteGarden() {
+      gardenService.deleteGarden({ gardenId: this.garden.id })
+        .then(() => {
+          this.$router.replace({ name: 'home' });
+        })
+        .catch(() => {
+          this.error = true;
+        });
     },
   },
   created() {
